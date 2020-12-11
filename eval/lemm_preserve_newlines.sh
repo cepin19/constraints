@@ -1,0 +1,1 @@
+ sed 's/^$/#empty/g' | ../../udpipe/udpipe-1.2.0-bin/bin-linux64/udpipe  --tagger=templates=lemmatizer --tag --input horizontal --tokenizer=presegmented --immediate  ../../udpipe/czech-pdt-ud-2.5-191206.udpipe  | cut -f3 | grep -v ^\#  | tr '\n' ' ' | sed 's/  /\n/g' | sed 's/empt//g'
