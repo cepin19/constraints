@@ -1,5 +1,5 @@
 #set -e
-spm_dir="/home/big_maggie/usr/marian_prometheus/marian_1.9.0/marian-dev/build/"
+spm_dir="/home/big_maggie/usr/marian_bakchus/marian_1.9.0/marian-dev/build/"
 
 echo "model, test set, surface bleu, surface coverage, lemma bleu, lemma coverage, placement correlation" > all_results.csv
 echo >> all_results.csv
@@ -18,7 +18,7 @@ do
 	do
 		for testset in  "news20.en.sp" "news20.en.suffix_constraints.sp" "news20.en.suffix_constraints_lemmatized.sp" "news20.en.suffix_constraints_stemmed.sp" "news20.en.constraint_suffix_empty.sp" #"news20.en.sp.factors" "news20.en.sp.factors.lemmatized" "news20.en.sp.factors.fake"
 		do
-		cat $testset | ../marian-constraints_prom/build/marian-decoder -v $src_vocab $tgt_vocab -m models/$model  $shift -d 0 1 2  --mini-batch 64 --max-length-crop --max-length 100 --max-length-factor 2 --maxi-batch-sort=src --maxi-batch=50 | $spm_dir/spm_decode --model ../corp/encs.model  > out/"$model"_"$testset".out
+		cat $testset | ../marian-constraints_prom/build/marian-decoder -v $src_vocab $tgt_vocab -m models/$model  $shift -d 0 1  --mini-batch 64 --max-length-crop --max-length 100 --max-length-factor 2 --maxi-batch-sort=src --maxi-batch=50 | $spm_dir/spm_decode --model ../corp/encs.model  > out/"$model"_"$testset".out
 		cat out/"$model"_"$testset".out | bash lemm_preserve_newlines.sh > out/"$model"_"$testset".out.lemmatized
 		python3 const_coverage_and_placement.py news20.encs.constraints_skip_prob0.0_tgt_only.snt.lemmatized out/"$model"_"$testset".out.lemmatized news20.cs.snt > out/"$model"_"$testset".lemma_const_coverage
 		python3 const_coverage_and_placement.py news20.encs.constraints_skip_prob0.0_tgt_only.snt  out/"$model"_"$testset".out news20.cs.snt > out/"$model"_"$testset".surface_const_coverage
