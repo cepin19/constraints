@@ -1,4 +1,5 @@
 usage="""
+THIS VERSION DOES NOT CHECK THE TARGET SIDE
 Adds dictionary based constraints as a factors to corresponding source tokens.
 Expects all input files to be sentencepiece-processed.
 Creates both lemmatized and non-lemmatized version of the constraints.
@@ -107,22 +108,19 @@ def add_constraints(src_line,src_line_lemm,tgt_line,tgt_line_lemm,dict, tok_term
                                                                                                                     ' ,').replace(
                             '?', ' ?').replace('!', ' !').strip()
          #               print("Looking for {}  in {}".format(dict_value,tgt_line_lemm))
-                        #found on both token and subword level in target (probably checking token level is enough?)
-                        if tokens_in_sent(dict_value, tgt_line_lemm) and tokens_in_sent(dict_value_detok,
-                                                                                         tgt_line_lemm_detok):
 
-                            new_src_line = new_src_line.replace(dict_key, '{} {}'.format(
+                        new_src_line = new_src_line.replace(dict_key, '{} {}'.format(
                                 dict_key.replace(' ', '|t1 ') + "|t1 ",
                                 dict_value.replace(' ', '|t2 ') + "|t2 "), 1)
 
-                            if src_constraints != "":
-                                src_constraints += " ▁ <c> "
-                                tgt_constraints += " ▁ <c> "
+                        if src_constraints != "":
+                            src_constraints += " ▁ <c> "
+                            tgt_constraints += " ▁ <c> "
 
-                            src_constraints = "{} {}".format(src_constraints, dict_key)
-                            tgt_constraints = "{} {}".format(tgt_constraints, dict_value)
+                        src_constraints = "{} {}".format(src_constraints, dict_key)
+                        tgt_constraints = "{} {}".format(tgt_constraints, dict_value)
 
-                            break
+                        break
     constraintfile.write('\t'.join((src_constraints, tgt_constraints)) + '\n')
 
     # add default factors
